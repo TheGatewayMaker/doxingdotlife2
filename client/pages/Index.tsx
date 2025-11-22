@@ -183,86 +183,94 @@ export default function Index() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Country Dropdown */}
                 <div className="relative group">
+                  <label className="text-xs font-semibold text-muted-foreground block mb-2">
+                    By Country
+                  </label>
                   <input
                     type="text"
-                    placeholder="Search countries..."
+                    placeholder={selectedCountry ? selectedCountry : "Select country..."}
                     value={countrySearch}
                     onChange={(e) => setCountrySearch(e.target.value)}
-                    className="w-full px-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent text-sm"
+                    className="w-full px-4 py-3 bg-card border border-border hover:border-accent/50 rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent text-sm transition-colors"
                   />
                   {countrySearch && (
-                    <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg z-50 max-h-48 overflow-y-auto">
-                      {filteredCountries.map((country) => (
-                        <button
-                          key={country}
-                          onClick={() => {
-                            setSelectedCountry(country);
-                            setCountrySearch("");
-                            setSelectedCity("");
-                          }}
-                          className="w-full text-left px-4 py-2 hover:bg-accent hover:text-accent-foreground text-sm transition-colors"
-                        >
-                          {country}
-                        </button>
-                      ))}
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-lg z-50 max-h-48 overflow-y-auto shadow-lg">
+                      {filteredCountries.length > 0 ? (
+                        filteredCountries.map((country) => (
+                          <button
+                            key={country}
+                            onClick={() => {
+                              setSelectedCountry(country);
+                              setCountrySearch("");
+                              setSelectedCity("");
+                            }}
+                            className="w-full text-left px-4 py-2 hover:bg-accent/20 text-foreground text-sm transition-colors"
+                          >
+                            {country}
+                          </button>
+                        ))
+                      ) : (
+                        <div className="px-4 py-2 text-muted-foreground text-sm">No countries found</div>
+                      )}
                     </div>
                   )}
-                  {selectedCountry && !countrySearch && (
+                  {selectedCountry && (
                     <button
                       onClick={() => {
                         setSelectedCountry("");
                         setSelectedCity("");
+                        setCountrySearch("");
                       }}
-                      className="absolute top-0 right-0 px-4 py-3 text-accent"
+                      className="absolute top-3 right-3 text-accent hover:text-accent/80 transition-colors"
                     >
                       ✕
                     </button>
-                  )}
-                  {selectedCountry && !countrySearch && (
-                    <div className="text-sm text-accent mt-1">
-                      Selected: {selectedCountry}
-                    </div>
                   )}
                 </div>
 
                 {/* City Dropdown */}
                 {selectedCountry && (
                   <div className="relative group">
+                    <label className="text-xs font-semibold text-muted-foreground block mb-2">
+                      By City
+                    </label>
                     <input
                       type="text"
-                      placeholder="Search cities..."
+                      placeholder={selectedCity ? selectedCity : "Select city..."}
                       value={citySearch}
                       onChange={(e) => setCitySearch(e.target.value)}
-                      className="w-full px-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent text-sm"
+                      className="w-full px-4 py-3 bg-card border border-border hover:border-accent/50 rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent text-sm transition-colors"
                     />
                     {citySearch && (
-                      <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg z-50 max-h-48 overflow-y-auto">
-                        {availableCities.map((city) => (
-                          <button
-                            key={city}
-                            onClick={() => {
-                              setSelectedCity(city);
-                              setCitySearch("");
-                            }}
-                            className="w-full text-left px-4 py-2 hover:bg-accent hover:text-accent-foreground text-sm transition-colors"
-                          >
-                            {city}
-                          </button>
-                        ))}
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-lg z-50 max-h-48 overflow-y-auto shadow-lg">
+                        {availableCities.length > 0 ? (
+                          availableCities.map((city) => (
+                            <button
+                              key={city}
+                              onClick={() => {
+                                setSelectedCity(city);
+                                setCitySearch("");
+                              }}
+                              className="w-full text-left px-4 py-2 hover:bg-accent/20 text-foreground text-sm transition-colors"
+                            >
+                              {city}
+                            </button>
+                          ))
+                        ) : (
+                          <div className="px-4 py-2 text-muted-foreground text-sm">No cities found</div>
+                        )}
                       </div>
                     )}
-                    {selectedCity && !citySearch && (
+                    {selectedCity && (
                       <button
-                        onClick={() => setSelectedCity("")}
-                        className="absolute top-0 right-0 px-4 py-3 text-accent"
+                        onClick={() => {
+                          setSelectedCity("");
+                          setCitySearch("");
+                        }}
+                        className="absolute top-3 right-3 text-accent hover:text-accent/80 transition-colors"
                       >
                         ✕
                       </button>
-                    )}
-                    {selectedCity && !citySearch && (
-                      <div className="text-sm text-accent mt-1">
-                        Selected: {selectedCity}
-                      </div>
                     )}
                   </div>
                 )}
@@ -270,41 +278,46 @@ export default function Index() {
                 {/* Server Dropdown */}
                 {servers.length > 0 && (
                   <div className="relative group">
+                    <label className="text-xs font-semibold text-muted-foreground block mb-2">
+                      By Server
+                    </label>
                     <input
                       type="text"
-                      placeholder="Search servers..."
+                      placeholder={selectedServer ? selectedServer : "Select server..."}
                       value={serverSearch}
                       onChange={(e) => setServerSearch(e.target.value)}
-                      className="w-full px-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent text-sm"
+                      className="w-full px-4 py-3 bg-card border border-border hover:border-accent/50 rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent text-sm transition-colors"
                     />
                     {serverSearch && (
-                      <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg z-50 max-h-48 overflow-y-auto">
-                        {filteredServers.map((server) => (
-                          <button
-                            key={server}
-                            onClick={() => {
-                              setSelectedServer(server);
-                              setServerSearch("");
-                            }}
-                            className="w-full text-left px-4 py-2 hover:bg-accent hover:text-accent-foreground text-sm transition-colors"
-                          >
-                            {server}
-                          </button>
-                        ))}
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-lg z-50 max-h-48 overflow-y-auto shadow-lg">
+                        {filteredServers.length > 0 ? (
+                          filteredServers.map((server) => (
+                            <button
+                              key={server}
+                              onClick={() => {
+                                setSelectedServer(server);
+                                setServerSearch("");
+                              }}
+                              className="w-full text-left px-4 py-2 hover:bg-accent/20 text-foreground text-sm transition-colors"
+                            >
+                              {server}
+                            </button>
+                          ))
+                        ) : (
+                          <div className="px-4 py-2 text-muted-foreground text-sm">No servers found</div>
+                        )}
                       </div>
                     )}
-                    {selectedServer && !serverSearch && (
+                    {selectedServer && (
                       <button
-                        onClick={() => setSelectedServer("")}
-                        className="absolute top-0 right-0 px-4 py-3 text-accent"
+                        onClick={() => {
+                          setSelectedServer("");
+                          setServerSearch("");
+                        }}
+                        className="absolute top-3 right-3 text-accent hover:text-accent/80 transition-colors"
                       >
                         ✕
                       </button>
-                    )}
-                    {selectedServer && !serverSearch && (
-                      <div className="text-sm text-accent mt-1">
-                        Selected: {selectedServer}
-                      </div>
                     )}
                   </div>
                 )}
