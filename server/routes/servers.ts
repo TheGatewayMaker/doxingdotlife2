@@ -1,26 +1,14 @@
 import { RequestHandler } from "express";
-import { existsSync, readFileSync } from "fs";
-import { join } from "path";
+import { getServersList } from "../utils/r2-storage";
+import { ServersResponse } from "@shared/api";
 
-export const handleGetServers: RequestHandler = (req, res) => {
+export const handleGetServers: RequestHandler = async (req, res) => {
   try {
-    const dataDir = join(process.cwd(), "dist", "data");
-    const serversPath = join(dataDir, "serverslist.txt");
-    const servers: string[] = [];
-
-    if (existsSync(serversPath)) {
-      const content = readFileSync(serversPath, "utf-8");
-      servers.push(
-        ...content
-          .split("\n")
-          .map((line) => line.trim())
-          .filter((line) => line),
-      );
-    }
-
+    const servers = await getServersList();
     servers.sort();
 
-    res.json({ servers });
+    const response: ServersResponse = { servers };
+    res.json(response);
   } catch (error) {
     console.error("Error getting servers:", error);
     res.status(500).json({ error: "Failed to retrieve servers" });
